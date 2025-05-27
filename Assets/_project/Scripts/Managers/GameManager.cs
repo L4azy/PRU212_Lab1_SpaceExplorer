@@ -24,7 +24,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	protected override void Awake()
 	{
 		base.Awake();
-		_playerShip = FindObjectOfType<PlayerShip>();
+		_playerShip = FindFirstObjectByType<PlayerShip>();
 	}
 
 	void Start()
