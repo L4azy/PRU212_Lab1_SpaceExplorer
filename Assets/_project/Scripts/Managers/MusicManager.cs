@@ -77,8 +77,8 @@ public class MusicManager : SingletonMonoBehaviour<MusicManager>
 		{
 			musicMix.Initialize();
 		}
-		// uncomment when audio settings are implemented
-		//AudioSettings.Instance.LoadAudioSettings();
+		
+		AudioSettings.Instance.LoadAudioSettings();
 	}
 
 	void Start()

@@ -16,9 +16,7 @@ public class StartMenuUI : MonoBehaviour
 	[SerializeField] AudioSource _audioSource;
 	[SerializeField] UIButton _settingsButton;
 	PlayerInputBase _playerInput;
-#if !UNITY_IOS && !UNITY_ANDROID
 	PlayerKeyboardInput _playerKeyboardInput;
-#endif
 
 	void Awake()
 	{
@@ -26,12 +24,13 @@ public class StartMenuUI : MonoBehaviour
 		_playerKeyboardInput = (PlayerKeyboardInput)_playerInput;
 		//_playButton.gameObject.SetActive(false);
 		_pressSpaceText.SetActive(true);
-
+		ResetFadePanel();
 	}
 
 	void OnEnable()
 	{
 		_audioSource.volume = 1f;
+		ResetFadePanel();
 		_fadePanel.DOFade(0f, 1f);
 		_settingsButton?.Init(LoadSettingsScene);
 		UpdateControlsText();
@@ -42,19 +41,19 @@ public class StartMenuUI : MonoBehaviour
 		EventBus.Instance?.Unsubscribe<SettingsSavedEvent>(OnSettingsUpdated);
 	}
 
-#if !UNITY_IOS && !UNITY_ANDROID
 	void Update()
 	{
 		var keyboard = Keyboard.current;
 		if (keyboard != null && keyboard.spaceKey.wasPressedThisFrame)
 		{
+			Debug.Log("Space key pressed! Starting game...");
 			StartGame();
 		}
 	}
-#endif
 
 	void StartGame()
 	{
+		_fadePanel.raycastTarget = true;
 		_audioSource.DOFade(0f, 2f);
 		_fadePanel.DOFade(1f, 1f).OnComplete(() =>
 		{
@@ -67,17 +66,14 @@ public class StartMenuUI : MonoBehaviour
 		SceneManager.LoadScene("Settings", LoadSceneMode.Additive);
 	}
 
-#if !UNITY_IOS && !UNITY_ANDROID
 	void OnSettingsUpdated(SettingsSavedEvent _)
 	{
 		_playerKeyboardInput.LoadKeyBindings();
 		UpdateControlsText();
 	}
-#endif
 
 	void UpdateControlsText()
 	{
-#if !UNITY_IOS && !UNITY_ANDROID
 		_controlsPanel.SetActive(true);
 		var rotateLeftKey = _playerKeyboardInput.RotateLeftKey;
 		var rotateRightKey = _playerKeyboardInput.RotateRightKey;
@@ -88,8 +84,19 @@ public class StartMenuUI : MonoBehaviour
 		_rotateControlsText.text = $"{rotateLeftKey} / {rotateRightKey} - Rotate Left / Right";
 		_thrustFireControlsText.text = $"{thrustKey} / {fireKey} - Thrust Fire";
 		_hyperspaceControlText.text = $"{hyperspaceKey} - Hyperspace";
-#else
-        _controlsPanel.gameObject.SetActive(false);
-#endif
 	}
+
+	public void ResetFadePanel()
+	{
+		if (_fadePanel != null)
+		{
+			var color = _fadePanel.color;
+			color.a = 0f; // Set alpha to 0
+			_fadePanel.color = color;
+
+			// Disable raycast target to ensure it doesn't block input
+			_fadePanel.raycastTarget = false;
+		}
+	}
+
 }

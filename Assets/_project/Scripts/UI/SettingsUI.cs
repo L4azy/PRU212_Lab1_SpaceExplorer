@@ -22,19 +22,16 @@ public class SettingsUI : MonoBehaviour
 	[Header("Buttons")]
 	[SerializeField] Button _saveButton;
 	[SerializeField] Button _cancelButton;
+	[SerializeField] Button _mainMenuButton;
 
 	Key _rotateLeftKey, _rotateRightKey, _thrustKey, _fireKey, _hyperspaceKey;
 	PlayerKeyboardInput _playerKeyboardInput;
 
 	void OnEnable()
 	{
-#if !UNITY_IOS && !UNITY_ANDROID
 		_playerKeyboardInput = gameObject.AddComponent<PlayerKeyboardInput>();
 		LoadKeyBindings();
 		InitialKeyboardControls();
-#else
-        _keyBindingsPanel.SetActive(false);
-#endif
 		InitializeAudioSettingsControls();
 		SubscribeToFormButtonHandlers();
 	}
@@ -43,6 +40,7 @@ public class SettingsUI : MonoBehaviour
 	{
 		_saveButton.onClick.RemoveListener(OnSaveButtonClicked);
 		_cancelButton.onClick.RemoveListener(OnCancelButtonClicked);
+		_mainMenuButton.onClick.RemoveListener(OnMainMenuButtonClicked);
 		UnsubscribeFromAudioSettingsControlHandlers();
 	}
 
@@ -60,6 +58,7 @@ public class SettingsUI : MonoBehaviour
 	{
 		_saveButton.onClick.AddListener(OnSaveButtonClicked);
 		_cancelButton.onClick.AddListener(OnCancelButtonClicked);
+		_mainMenuButton.onClick.AddListener(OnMainMenuButtonClicked) ;
 	}
 
 	void InitialKeyboardControls()
@@ -165,6 +164,13 @@ public class SettingsUI : MonoBehaviour
 	{
 		CloseSettings();
 	}
+
+	void OnMainMenuButtonClicked()
+	{
+		SceneManager.UnloadSceneAsync("Settings");
+		SceneManager.LoadScene("MenuScreen");
+	}
+
 
 	void CloseSettings()
 	{
