@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -112,36 +113,4 @@ public class GameUI : MonoBehaviour
 		}
 	}
 
-	// Call this after game over and after showing play again prompt
-	void ShowLeaderboardPrompt()
-	{
-		_leaderboardPanel.SetActive(true);
-		_playerNameInput.text = "";
-		_playerNameInput.ActivateInputField();
-	}
-
-	public void OnSubmitPlayerName()
-	{
-		int finalScore = GameManager.Instance.GetFinalScore();
-		string playerName = _playerNameInput.text;
-		if (string.IsNullOrWhiteSpace(playerName))
-		{
-			playerName = "Anonymous"; // Default name if input is empty  
-		}
-		LeaderboardManager.Instance.AddEntry(playerName, finalScore);
-		UpdateLeaderboardUI();
-		_leaderboardPanel.SetActive(false);
-	}
-
-	void UpdateLeaderboardUI()
-	{
-		var entries = LeaderboardManager.Instance.GetEntries();
-		_leaderboardText.text = "";
-		int rank = 1;
-		foreach (var entry in entries)
-		{
-			_leaderboardText.text += $"{rank}. {entry.playerName} - {entry.score}\n";
-			rank++;
-		}
-	}
 }

@@ -1391,6 +1391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnShipDelayTime: 2
   _pointsForExtraLife: 10000
+  _scoreInputPanel: {fileID: 1354556308}
 --- !u!4 &558233977
 Transform:
   m_ObjectHideFlags: 0
@@ -2488,7 +2489,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 16.526855, y: 28.106812}
+  m_AnchoredPosition: {x: 16.526855, y: 28.106934}
   m_SizeDelta: {x: -330.5344, y: -208.2136}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &829017602
@@ -3457,9 +3458,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2048500706}
-        m_TargetAssemblyTypeName: InputHandler, NewAssembly
-        m_MethodName: AddNameToList
+      - m_Target: {fileID: 558233976}
+        m_TargetAssemblyTypeName: GameManager, NewAssembly
+        m_MethodName: OnNameSubmitted
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3576,7 +3577,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.068481445, y: 0}
+  m_AnchoredPosition: {x: 0.068359375, y: 0}
   m_SizeDelta: {x: -823.4084, y: -547.1686}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1354556310
@@ -4461,7 +4462,7 @@ MonoBehaviour:
   _playAgainText: {fileID: 1888991828}
   _playerLivesParent: {fileID: 646590853}
   _settingsButton: {fileID: 52645543}
-  _playerNameInput: {fileID: 0}
+  _playerNameInput: {fileID: 595472484}
   _leaderboardPanel: {fileID: 829017600}
   _leaderboardText: {fileID: 1751877354}
 --- !u!114 &2048500706
@@ -4473,12 +4474,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2048500700}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5840ed039a71d9041b238795729ef897, type: 3}
+  m_Script: {fileID: 11500000, guid: e0da53a5cc52cec4d8e59f8e83206cc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nameInput: {fileID: 595472484}
-  _highScorePanel: {fileID: 1354556308}
-  _filename: leaderboard.json
+  _scoreInput: {fileID: 595472484}
+  filename: leaderboard.json
+  _scoreInputPanel: {fileID: 1354556308}
 --- !u!1 &2083075408
 GameObject:
   m_ObjectHideFlags: 0

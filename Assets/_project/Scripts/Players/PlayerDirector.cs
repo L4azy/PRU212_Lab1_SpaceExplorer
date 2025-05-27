@@ -133,7 +133,7 @@ public class PlayerDirector : MonoBehaviour
 	{
 		if (!_fireEnabled) return;
 		if (!_playerInput.GetFireInput()) return;
-		Debug.Log("Fired bullets");
+		//Debug.Log("Fired bullets");
 		DisableFire();
 		_playerShip.FireBullet();
 	}

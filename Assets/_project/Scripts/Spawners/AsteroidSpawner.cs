@@ -129,7 +129,7 @@ public class AsteroidSpawner : MonoBehaviour
 		var prefab = GetRandomPrefab(size);
 		if (!prefab)
 		{
-			Debug.LogError("Asteroid prefab is null.", this);
+			//Debug.LogError("Asteroid prefab is null.", this);
 			return null;
 		}
 		var asteroid = Instantiate(prefab, _transform);

@@ -16,6 +16,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	PlayerShip _playerShip;
 	Timer _nextRoundTimer, _spawnShipTimer;
 
+	[SerializeField] GameObject _scoreInputPanel;
+
 	public void RestartGame()
 	{
 		StartGame();
@@ -50,16 +52,45 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 	public void PlayerDied()
 	{
-		Debug.Log("Player died");
+		if (_gameState == GameState.GameOver)
+		{
+			//Debug.LogWarning("PlayerDied called after game is already over. Ignoring.");
+			return;
+		}
+
+		//Debug.Log("Player died");
 		EventBus.Instance.Raise(new StopAllMusicEvent());
+
 		if (Lives > 0)
 		{
+			//Debug.Log($"Player has {Lives} lives remaining. Respawning...");
 			SetGameState(GameState.PlayerDied);
 			StartSpawnShipTimer();
 			return;
 		}
+
+		//Debug.Log($"Player has no lives left. Score: {Score}, HighScore: {HighScore}");
+
+		if (Score >= HighScore)
+		{
+			//Debug.Log("New high score! Showing score input panel.");
+			_scoreInputPanel.SetActive(true);
+			return;
+		}
+		
+		//Debug.Log("No new high score. Proceeding to Game Over.");
 		GameOver();
 	}
+
+
+	public void OnNameSubmitted()
+	{
+		//Debug.Log("Name submitted. Proceeding...");
+		_scoreInputPanel.SetActive(false); // Hide the score input panel
+		GameOver(); // Proceed to Game Over logic
+	}
+
+
 
 	void StartNextRoundTimer()
 	{
@@ -152,6 +183,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		_gameState = gameState;
 		EventBus.Instance.Raise(new GameStateChangedEvent(_gameState));
 	}
+
+#if UNITY_EDITOR
+	[ContextMenu("Reset High Score")]
+	private void ResetHighScore()
+	{
+		HighScore = 0;
+		
+		Debug.Log("High score has been reset.");
+	}
+#endif
+
 }
 
 public enum GameState

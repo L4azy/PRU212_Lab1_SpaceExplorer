@@ -18,7 +18,7 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 				if (_instance == null)
 				{
 					// Look for an existing one
-					_instance = FindObjectOfType<T>();
+					_instance = FindFirstObjectByType<T>();
 
 					// Create one if there is none
 					if (_instance == null)
