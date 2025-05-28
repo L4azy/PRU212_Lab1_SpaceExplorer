@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class LeaderboardUI : MonoBehaviour
 {
-	[SerializeField] GameObject _panel;
-	[SerializeField] GameObject _leaderboardUIElementPrefab;
-	[SerializeField] Transform _elementWrapper;
+	[SerializeField] private GameObject _panel;
+	[SerializeField] private GameObject _leaderboardUIElementPrefab;
+	[SerializeField] private Transform _elementWrapper;
 
-	List<GameObject> uiElements = new();
+	private readonly List<GameObject> _uiElements = new();
 
 	private void OnEnable()
 	{
@@ -28,7 +28,6 @@ public class LeaderboardUI : MonoBehaviour
 		EventBus.Instance.Unsubscribe<HighscoreListChangedEvent>(OnHighscoreListChanged);
 	}
 
-
 	private void OnHighscoreListChanged(HighscoreListChangedEvent eventArgs)
 	{
 		Debug.Log($"[LeaderboardUI] Received HighscoreListChangedEvent with {eventArgs.HighscoreList.Count} elements.");
@@ -45,44 +44,38 @@ public class LeaderboardUI : MonoBehaviour
 		_panel.SetActive(false);
 	}
 
-	private void UpdateUI(List<HighScoreElement> list)
-{
-    Debug.Log($"UpdateUI called with {list.Count} elements.");
+	private void UpdateUI(List<HighScoreElement> highscoreList)
+	{
+		Debug.Log($"[LeaderboardUI] UpdateUI called with {highscoreList.Count} elements.");
 
-    // Clear existing UI elements
-    foreach (var element in uiElements)
-    {
-        Destroy(element.gameObject);
-    }
-    uiElements.Clear();
+		// Clear existing UI elements
+		foreach (var element in _uiElements)
+		{
+			Destroy(element);
+		}
+		_uiElements.Clear();
 
-    for (int i = 0; i < list.Count; i++)
-    {
-        HighScoreElement el = list[i];
-        Debug.Log($"Element {i}: {el.playerName}, {el.points}");
+		// Populate the leaderboard UI with the provided highscore list
+		for (int i = 0; i < highscoreList.Count; i++)
+		{
+			HighScoreElement highScore = highscoreList[i];
+			Debug.Log($"[LeaderboardUI] Adding element {i}: {highScore.playerName}, {highScore.points}");
 
-        if (el != null)
-        {
-            Debug.Log($"Instantiating new UI element for {el.playerName}.");
-            // Instantiate new entry
-            var inst = Instantiate(_leaderboardUIElementPrefab, Vector3.zero, Quaternion.identity);
-            inst.transform.SetParent(_elementWrapper, false);
+			// Instantiate a new leaderboard entry
+			var instance = Instantiate(_leaderboardUIElementPrefab, _elementWrapper);
+			var texts = instance.GetComponentsInChildren<Text>();
 
-            // Update name & points
-            var texts = inst.GetComponentsInChildren<Text>();
-            if (texts.Length >= 2)
-            {
-                texts[0].text = el.playerName;
-                texts[1].text = el.points.ToString();
-            }
-            else
-            {
-                Debug.LogError("Prefab does not have enough Text components to display player name and points.");
-            }
+			if (texts.Length >= 2)
+			{
+				texts[0].text = highScore.playerName; // Player name
+				texts[1].text = highScore.points.ToString(); // Player points
+			}
+			else
+			{
+				Debug.LogError("[LeaderboardUI] Prefab does not have enough Text components to display player name and points.");
+			}
 
-            uiElements.Add(inst);
-        }
-    }
-}
-
+			_uiElements.Add(instance);
+		}
+	}
 }
