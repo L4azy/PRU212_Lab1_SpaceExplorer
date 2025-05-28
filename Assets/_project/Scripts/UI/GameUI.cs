@@ -16,6 +16,8 @@ public class GameUI : MonoBehaviour
 	[SerializeField] GameObject _leaderboardPanel;
 	[SerializeField] TMP_Text _leaderboardText;
 
+	[SerializeField] string leaderboardFilename = "leaderboard.json"; // Set this in the Inspector or hardcode
+
 	Timer _showPlayAgainPromptTimer;
 
 	void OnEnable()
@@ -31,6 +33,11 @@ public class GameUI : MonoBehaviour
 		_showPlayAgainPromptTimer = TimerManager.Instance.CreateTimer<CountdownTimer>();
 	}
 
+	void Start()
+	{
+		DisplayLowestLeaderboardScore();
+	}
+
 	void OnDisable()
 	{
 		EventBus.Instance?.Unsubscribe<ScoreChangedEvent>(OnScoreChanged);
@@ -38,6 +45,33 @@ public class GameUI : MonoBehaviour
 		EventBus.Instance?.Unsubscribe<GameStateChangedEvent>(OnGameStateChanged);
 		_showPlayAgainPromptTimer.OnTimerStop -= ShowPlayAgainPrompt;
 		TimerManager.Instance?.ReleaseTimer<CountdownTimer>(_showPlayAgainPromptTimer);
+	}
+
+	void DisplayLowestLeaderboardScore()
+	{
+		// Use FileHandler to read the leaderboard JSON
+		List<HighScoreElement> scores = FileHandler.ReadListFromJSON<HighScoreElement>(leaderboardFilename);
+
+		if (scores == null || scores.Count == 0)
+		{
+			Debug.LogWarning("[GameUI] No scores found in the leaderboard.");
+			_highScoreText.text = "N/A";
+			return;
+		}
+
+		// Find the lowest score
+		int minScore = int.MaxValue;
+		foreach (var score in scores)
+		{
+			if (score.points < minScore)
+			{
+				minScore = score.points;
+			}
+		}
+
+		// Update the high score text
+		_highScoreText.text = minScore.ToString();
+		Debug.Log($"[GameUI] Lowest score in leaderboard: {minScore}");
 	}
 
 	void Update()
@@ -62,6 +96,7 @@ public class GameUI : MonoBehaviour
 			_gameOverText.enabled = true;
 			_showPlayAgainPromptTimer.OnTimerStop += ShowPlayAgainPrompt;
 			_showPlayAgainPromptTimer.Start(3f);
+			DisplayLowestLeaderboardScore();
 			return;
 		}
 		_showPlayAgainPromptTimer.OnTimerStop -= ShowPlayAgainPrompt;
@@ -91,7 +126,8 @@ public class GameUI : MonoBehaviour
 
 	void OnScoreChanged(ScoreChangedEvent scoreChangedEvent)
 	{
-		UpdateScore(scoreChangedEvent.Score, scoreChangedEvent.HighScore);
+		DisplayLowestLeaderboardScore();
+		UpdateScore(scoreChangedEvent.Score, int.Parse(_highScoreText.text));
 	}
 
 	void OnPlayerLivesChanged(PlayerLivesChangedEvent playerLivesChangedEvent)
@@ -112,5 +148,4 @@ public class GameUI : MonoBehaviour
 			_playerLivesParent.GetChild(i).gameObject.SetActive(i < lives);
 		}
 	}
-
 }
