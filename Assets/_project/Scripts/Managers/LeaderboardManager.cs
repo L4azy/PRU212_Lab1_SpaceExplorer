@@ -1,72 +1,63 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
-
-[Serializable]
-public class LeaderboardEntry
-{
-	public string playerName;
-	public int score;
-}
-
-[Serializable]
-public class LeaderboardData
-{
-	public List<LeaderboardEntry> entries = new List<LeaderboardEntry>();
-}
 
 public class LeaderboardManager : MonoBehaviour
 {
-	public static LeaderboardManager Instance { get; private set; }
-	private const int MaxEntries = 5;
-	private string _savePath;
-	private LeaderboardData _data = new LeaderboardData();
+	List<HighScoreElement> _highscoreList = new();
+	[SerializeField] int maxCount = 5;
+	[SerializeField] string filename;
 
-	void Awake()
+	private void Awake()
 	{
-		if (Instance == null)
+		LoadHighscores();
+	}
+
+	private void LoadHighscores()
+	{
+		_highscoreList = FileHandler.ReadListFromJSON<HighScoreElement>(filename);
+
+		Debug.Log("[LeaderboardManager] Loaded high scores from JSON:");
+		foreach (var highScore in _highscoreList)
 		{
-			Instance = this;
-			_savePath = Path.Combine(Application.persistentDataPath, "leaderboard.json");
-			Load();
-			DontDestroyOnLoad(gameObject);
+			Debug.Log($"Player: {highScore.playerName}, Points: {highScore.points}");
 		}
-		else
+
+		while (_highscoreList.Count > maxCount)
 		{
-			Destroy(gameObject);
+			_highscoreList.RemoveAt(maxCount);
 		}
+
+		Debug.Log("[LeaderboardManager] Raising HighscoreListChangedEvent via EventBus.");
+		EventBus.Instance.Raise(new HighscoreListChangedEvent(_highscoreList));
 	}
 
-	public List<LeaderboardEntry> GetEntries() => _data.entries;
 
-	public void AddEntry(string playerName, int score)
+	private void SaveHighscore()
 	{
-		_data.entries.Add(new LeaderboardEntry { playerName = playerName, score = score });
-		_data.entries.Sort((a, b) => b.score.CompareTo(a.score));
-		if (_data.entries.Count > MaxEntries)
-			_data.entries.RemoveAt(_data.entries.Count - 1);
-		Save();
+		FileHandler.SaveToJSON<HighScoreElement>(_highscoreList, filename);
 	}
 
-	private void Save()
+	public void AddHighscoreIfPossible(HighScoreElement element)
 	{
-		File.WriteAllText(_savePath, JsonUtility.ToJson(_data, true));
-	}
-
-	private void Load()
-	{
-		if (File.Exists(_savePath))
+		for (int i = 0; i < maxCount; i++)
 		{
-			_data = JsonUtility.FromJson<LeaderboardData>(File.ReadAllText(_savePath));
+			if (i >= _highscoreList.Count || element.points > _highscoreList[i].points)
+			{
+				// Add new high score
+				_highscoreList.Insert(i, element);
+
+				while (_highscoreList.Count > maxCount)
+				{
+					_highscoreList.RemoveAt(maxCount);
+				}
+
+				SaveHighscore();
+
+				Debug.Log("[LeaderboardManager] Raising HighscoreListChangedEvent via EventBus.");
+				EventBus.Instance.Raise(new HighscoreListChangedEvent(_highscoreList));
+
+				break;
+			}
 		}
 	}
-
-	public void ClearLeaderboard()
-	{
-		_data.entries.Clear();
-		if (File.Exists(_savePath))
-			File.Delete(_savePath);
-	}
-
 }

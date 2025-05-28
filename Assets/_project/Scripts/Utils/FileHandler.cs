@@ -22,7 +22,11 @@ public static class FileHandler
 
 	public static List<T> ReadListFromJSON<T>(string filename)
 	{
+		string path = GetPath(filename);
 		string content = ReadFile(GetPath(filename));
+
+		Debug.Log($"[FileHandler] Reading file: {path}");
+		Debug.Log($"[FileHandler] File content: {content}");
 
 		if (string.IsNullOrEmpty(content) || content == "{}")
 		{
@@ -57,6 +61,8 @@ public static class FileHandler
 
 	private static void WriteFile(string path, string content)
 	{
+		//Debug.Log($"Writing to file: {path}");
+		//Debug.Log($"Content: {content}");
 		FileStream fileStream = new FileStream(path, FileMode.Create);
 
 		using (StreamWriter writer = new StreamWriter(fileStream))

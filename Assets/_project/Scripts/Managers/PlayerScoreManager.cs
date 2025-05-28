@@ -11,9 +11,29 @@ public class PlayerScoreManager : MonoBehaviour
 
 	private void Start()
 	{
+		Debug.Log($"Persistent Data Path: {Application.persistentDataPath}");
+		Debug.Log($"High score filename: {filename}");
 		entries = FileHandler.ReadListFromJSON<PlayerScoreInput>(filename);
+
+		Debug.Log($"[PlayerScoreManager] Loaded {entries.Count} entries from JSON.");
+		foreach (var entry in entries)
+		{
+			Debug.Log($"[PlayerScoreManager] Player: {entry.playerName}, Points: {entry.points}");
+		}
+
+		// Convert PlayerScoreInput to HighScoreElement and raise the event
+		var highScoreElements = new List<HighScoreElement>();
+		foreach (var entry in entries)
+		{
+			highScoreElements.Add(new HighScoreElement(entry.playerName, entry.points));
+		}
+
+		Debug.Log("[PlayerScoreManager] Raising HighscoreListChangedEvent via EventBus.");
+		EventBus.Instance.Raise(new HighscoreListChangedEvent(highScoreElements));
+
 		_scoreInputPanel.SetActive(false);
 	}
+
 
 	public void AddNameToList()
 	{
@@ -38,6 +58,8 @@ public class PlayerScoreManager : MonoBehaviour
 		Debug.Log($"Added new entry: {newEntry.playerName} with score {newEntry.points}. Saved to {filename}.");
 
 		_scoreInputPanel.SetActive(false);
+
+		GameManager.Instance.RestartGame();
 	}
 
 }

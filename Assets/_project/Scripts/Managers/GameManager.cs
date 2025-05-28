@@ -83,15 +83,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	}
 
 
-	public void OnNameSubmitted()
-	{
-		//Debug.Log("Name submitted. Proceeding...");
-		_scoreInputPanel.SetActive(false); // Hide the score input panel
-		GameOver(); // Proceed to Game Over logic
-	}
-
-
-
 	void StartNextRoundTimer()
 	{
 		_nextRoundTimer.Start(3f);

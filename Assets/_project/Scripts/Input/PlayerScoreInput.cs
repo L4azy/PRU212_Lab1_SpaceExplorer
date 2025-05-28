@@ -8,7 +8,7 @@ public class PlayerScoreInput
 
 	public PlayerScoreInput(string name, int points)
 	{
-		playerName = name;
+		this.playerName = name;
 		this.points = points;
 	}
 }
