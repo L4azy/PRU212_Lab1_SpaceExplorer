@@ -8,4 +8,6 @@ public struct HighscoreListChangedEvent
 	{
 		HighscoreList = highscoreList;
 	}
+
+	public struct LeaderboardUpdatedEvent { }
 }

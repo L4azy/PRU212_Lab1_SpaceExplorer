@@ -4543,6 +4543,7 @@ MonoBehaviour:
   _scoreInput: {fileID: 595472484}
   filename: leaderboard.json
   _scoreInputPanel: {fileID: 1354556308}
+  maxCount: 5
 --- !u!114 &2048500707
 MonoBehaviour:
   m_ObjectHideFlags: 0

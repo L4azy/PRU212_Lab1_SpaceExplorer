@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static HighscoreListChangedEvent;
 
 public class LeaderboardUI : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class LeaderboardUI : MonoBehaviour
 	{
 		Debug.Log("[LeaderboardUI] Subscribing to HighscoreListChangedEvent via EventBus.");
 		EventBus.Instance.Subscribe<HighscoreListChangedEvent>(OnHighscoreListChanged);
+		EventBus.Instance.Subscribe<LeaderboardUpdatedEvent>(OnLeaderboardUpdated);
 	}
 
 	private void OnDisable()
@@ -26,12 +28,21 @@ public class LeaderboardUI : MonoBehaviour
 
 		Debug.Log("[LeaderboardUI] Unsubscribing from HighscoreListChangedEvent via EventBus.");
 		EventBus.Instance.Unsubscribe<HighscoreListChangedEvent>(OnHighscoreListChanged);
+		EventBus.Instance.Unsubscribe<LeaderboardUpdatedEvent>(OnLeaderboardUpdated);
 	}
 
 	private void OnHighscoreListChanged(HighscoreListChangedEvent eventArgs)
 	{
 		Debug.Log($"[LeaderboardUI] Received HighscoreListChangedEvent with {eventArgs.HighscoreList.Count} elements.");
 		UpdateUI(eventArgs.HighscoreList);
+	}
+
+	private void OnLeaderboardUpdated(LeaderboardUpdatedEvent _)
+	{
+		Debug.Log("[LeaderboardUI] Received LeaderboardUpdatedEvent. Refreshing leaderboard.");
+		// Re-read the leaderboard data and update the UI
+		List<HighScoreElement> highscoreList = FileHandler.ReadListFromJSON<HighScoreElement>("leaderboard.json");
+		UpdateUI(highscoreList);
 	}
 
 	public void ShowPanel()

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static HighscoreListChangedEvent;
 
 public class LeaderboardManager : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class LeaderboardManager : MonoBehaviour
 		TrimHighscores();
 		SaveHighscore();
 		RaiseHighscoreListChangedEvent();
+		EventBus.Instance.Raise(new LeaderboardUpdatedEvent());
 	}
 
 
@@ -52,13 +54,27 @@ public class LeaderboardManager : MonoBehaviour
 
 	public void AddHighscoreIfPossible(HighScoreElement element)
 	{
-		Debug.Log($"[LeaderboardManager] Adding high score: {element.playerName}, {element.points}");
-		_highscoreList.Add(element);
+		for (int i = 0; i < maxCount; i++)
+		{
+			if (i >= _highscoreList.Count || element.points > _highscoreList[i].points)
+			{
+				_highscoreList.Insert(i, element);
 
-		TrimHighscores();
-		SaveHighscore();
-		RaiseHighscoreListChangedEvent();
+				while (_highscoreList.Count > maxCount)
+				{
+					_highscoreList.RemoveAt(maxCount);
+				}
+
+				SaveHighscore();
+
+				Debug.Log("[LeaderboardManager] Raising LeaderboardUpdatedEvent via EventBus.");
+				EventBus.Instance.Raise(new LeaderboardUpdatedEvent());
+
+				break;
+			}
+		}
 	}
+
 
 	private void TrimHighscores()
 	{

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class EventBus : SingletonMonoBehaviour<EventBus>
 {
@@ -36,8 +37,15 @@ public class EventBus : SingletonMonoBehaviour<EventBus>
 	{
 		var eventType = typeof(T);
 
-		if (!_eventDictionary.TryGetValue(eventType, out var value)) return;
+		if (!_eventDictionary.TryGetValue(eventType, out var value))
+		{
+			Debug.LogWarning($"[EventBus] No listeners for event type: {eventType}");
+			return;
+		}
+
 		var currentDelegate = value as Action<T>;
+		Debug.Log($"[EventBus] Raising event of type: {eventType}");
 		currentDelegate?.Invoke(eventArgs);
 	}
+
 }

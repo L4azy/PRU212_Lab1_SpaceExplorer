@@ -71,7 +71,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 		//Debug.Log($"Player has no lives left. Score: {Score}, HighScore: {HighScore}");
 
-		if (Score >= HighScore)
+		if (PlayerScoreManager.Instance.PlayerQualifiesForLeaderboard(Score))
 		{
 			//Debug.Log("New high score! Showing score input panel.");
 			_scoreInputPanel.SetActive(true);
@@ -106,9 +106,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	public void AddPoints(int points)
 	{
 		Score += points;
-		if (Score > HighScore) HighScore = Score;
 		Debug.Log($"Score: {Score}, HighScore: {HighScore}");
-		EventBus.Instance.Raise(new ScoreChangedEvent(Score, HighScore));
+		EventBus.Instance.Raise(new ScoreChangedEvent(Score, 0));
 		CheckForExtraLife();
 	}
 

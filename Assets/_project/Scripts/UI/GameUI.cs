@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static HighscoreListChangedEvent;
 
 public class GameUI : MonoBehaviour
 {
@@ -16,22 +17,29 @@ public class GameUI : MonoBehaviour
 	[SerializeField] GameObject _leaderboardPanel;
 	[SerializeField] TMP_Text _leaderboardText;
 
-	[SerializeField] string leaderboardFilename = "leaderboard.json"; // Set this in the Inspector or hardcode
+	string _leaderboardFilename = "leaderboard.json";
 
 	Timer _showPlayAgainPromptTimer;
 
 	void OnEnable()
 	{
+		if (EventBus.Instance == null)
+		{
+			Debug.LogWarning("[GameUI] EventBus.Instance is null in OnEnable. Skipping subscription.");
+			return;
+		}
+
 		EventBus.Instance.Subscribe<ScoreChangedEvent>(OnScoreChanged);
 		EventBus.Instance.Subscribe<PlayerLivesChangedEvent>(OnPlayerLivesChanged);
 		EventBus.Instance.Subscribe<GameStateChangedEvent>(OnGameStateChanged);
+		EventBus.Instance.Subscribe<LeaderboardUpdatedEvent>(OnLeaderboardUpdated);
 		_settingsButton.Init(LoadSettingsScene);
 		UpdatePlayerLives(3);
 		_gameOverText.enabled = false;
 		_playAgainText.enabled = false;
-		//_playAgainButton.gameObject.SetActive(false);
 		_showPlayAgainPromptTimer = TimerManager.Instance.CreateTimer<CountdownTimer>();
 	}
+
 
 	void Start()
 	{
@@ -40,17 +48,25 @@ public class GameUI : MonoBehaviour
 
 	void OnDisable()
 	{
-		EventBus.Instance?.Unsubscribe<ScoreChangedEvent>(OnScoreChanged);
-		EventBus.Instance?.Unsubscribe<PlayerLivesChangedEvent>(OnPlayerLivesChanged);
-		EventBus.Instance?.Unsubscribe<GameStateChangedEvent>(OnGameStateChanged);
+		if (EventBus.Instance == null)
+		{
+			Debug.LogWarning("[GameUI] EventBus.Instance is null in OnDisable. Skipping unsubscription.");
+			return;
+		}
+
+		EventBus.Instance.Unsubscribe<ScoreChangedEvent>(OnScoreChanged);
+		EventBus.Instance.Unsubscribe<PlayerLivesChangedEvent>(OnPlayerLivesChanged);
+		EventBus.Instance.Unsubscribe<GameStateChangedEvent>(OnGameStateChanged);
+		EventBus.Instance.Unsubscribe<LeaderboardUpdatedEvent>(OnLeaderboardUpdated);
 		_showPlayAgainPromptTimer.OnTimerStop -= ShowPlayAgainPrompt;
 		TimerManager.Instance?.ReleaseTimer<CountdownTimer>(_showPlayAgainPromptTimer);
 	}
 
+
 	void DisplayLowestLeaderboardScore()
 	{
 		// Use FileHandler to read the leaderboard JSON
-		List<HighScoreElement> scores = FileHandler.ReadListFromJSON<HighScoreElement>(leaderboardFilename);
+		List<HighScoreElement> scores = FileHandler.ReadListFromJSON<HighScoreElement>(_leaderboardFilename);
 
 		if (scores == null || scores.Count == 0)
 		{
@@ -126,14 +142,26 @@ public class GameUI : MonoBehaviour
 
 	void OnScoreChanged(ScoreChangedEvent scoreChangedEvent)
 	{
-		DisplayLowestLeaderboardScore();
-		UpdateScore(scoreChangedEvent.Score, int.Parse(_highScoreText.text));
+		// Safely parse the high score text or default to 0 if parsing fails
+		int highScore;
+		if (!int.TryParse(_highScoreText.text, out highScore))
+		{
+			Debug.LogWarning($"[GameUI] Failed to parse _highScoreText.text: {_highScoreText.text}. Defaulting to 0.");
+			highScore = 0;
+		}
+
+		// Update the score and high score
+		UpdateScore(scoreChangedEvent.Score, highScore);
 	}
+
 
 	void OnPlayerLivesChanged(PlayerLivesChangedEvent playerLivesChangedEvent)
 	{
 		UpdatePlayerLives(playerLivesChangedEvent.Lives);
+
+		if (playerLivesChangedEvent.Lives <= 0)			EventBus.Instance.Raise(new GameStateChangedEvent(GameState.GameOver)); // Trigger game over sequence
 	}
+
 
 	void UpdateScore(int score, int highScore)
 	{
@@ -147,5 +175,9 @@ public class GameUI : MonoBehaviour
 		{
 			_playerLivesParent.GetChild(i).gameObject.SetActive(i < lives);
 		}
+	}
+	void OnLeaderboardUpdated(LeaderboardUpdatedEvent _)
+	{
+		DisplayLowestLeaderboardScore();
 	}
 }
