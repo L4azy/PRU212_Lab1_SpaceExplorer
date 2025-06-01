@@ -66,12 +66,32 @@ public class Ghost : MonoBehaviour
 		_renderer.enabled = false;
 	}
 
+	bool IsOnScreen()
+	{
+		Vector3 viewportPos = Camera.main.WorldToViewportPoint(_transform.position);
+		return viewportPos.x >= 0 && viewportPos.x <= 1 && viewportPos.y >= 0 && viewportPos.y <= 1;
+	}
+
 	void RepositionGhost()
 	{
 		if (_parentTransform == null) return;
 		_transform.SetPositionAndRotation(_parentTransform.position + GhostOffset, _parentTransform.rotation);
-		_collider.enabled = _renderer.isVisible;
+
+		bool visible = IsOnScreen();
+		_collider.enabled = visible;
+
+		int newLayer = visible
+			? LayerMask.NameToLayer("Asteroid")
+			: LayerMask.NameToLayer("Offscreen");
+
+		if (gameObject.layer != newLayer)
+		{
+			//Debug.Log($"{gameObject.name} changing layer to {(visible ? "Asteroid" : "Offscreen")}");
+			gameObject.layer = newLayer;
+		}
 	}
+
+
 
 	Vector3 GhostOffset
 	{

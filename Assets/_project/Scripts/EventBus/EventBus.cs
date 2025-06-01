@@ -44,7 +44,7 @@ public class EventBus : SingletonMonoBehaviour<EventBus>
 		}
 
 		var currentDelegate = value as Action<T>;
-		Debug.Log($"[EventBus] Raising event of type: {eventType}");
+		//Debug.Log($"[EventBus] Raising event of type: {eventType}");
 		currentDelegate?.Invoke(eventArgs);
 	}
 

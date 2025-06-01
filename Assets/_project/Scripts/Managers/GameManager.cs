@@ -58,7 +58,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 			return;
 		}
 
-		//Debug.Log("Player died");
+		// Reset player heat on death
+		if (_playerShip != null)
+		{
+			var weapons = _playerShip.GetComponent<PlayerWeapons>();
+			if (weapons != null)
+				weapons.ResetHeat();
+		}
+
 		EventBus.Instance.Raise(new StopAllMusicEvent());
 
 		if (Lives > 0)
@@ -78,7 +85,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 			return;
 		}
 		
-		//Debug.Log("No new high score. Proceeding to Game Over.");
 		GameOver();
 	}
 
@@ -173,16 +179,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		_gameState = gameState;
 		EventBus.Instance.Raise(new GameStateChangedEvent(_gameState));
 	}
-
-#if UNITY_EDITOR
-	[ContextMenu("Reset High Score")]
-	private void ResetHighScore()
-	{
-		HighScore = 0;
-		
-		Debug.Log("High score has been reset.");
-	}
-#endif
 
 }
 

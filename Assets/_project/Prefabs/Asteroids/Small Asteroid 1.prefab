@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 738980043493306658}
   - component: {fileID: 462450654292214339}
   - component: {fileID: 9110577337180890975}
+  - component: {fileID: 2454930009281541513}
+  - component: {fileID: 4046557977670841079}
   m_Layer: 9
   m_Name: Small Asteroid 1
   m_TagString: Untagged
@@ -191,6 +193,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _settings: {fileID: 11400000, guid: f01b9e0fb900bb24798579f4f8017326, type: 2}
+  _damageColor: {r: 0.85660374, g: 0.74509656, b: 0.19879664, a: 1}
+  _flashDuration: 0.1
 --- !u!114 &9110577337180890975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,3 +209,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ghostPrefab: {fileID: 1225372812811420702, guid: 655aac211cd3d524c9c157e689f8479e, type: 3}
   _swapDelay: 2
+--- !u!114 &2454930009281541513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4825704554288715769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04a40880d22a9a84a8c51664dfcde9d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 50
+--- !u!114 &4046557977670841079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4825704554288715769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c753bbc13cb5a54b917f351847098d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

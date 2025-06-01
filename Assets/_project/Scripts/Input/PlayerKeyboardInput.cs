@@ -20,6 +20,12 @@ public class PlayerKeyboardInput : PlayerInputBase
 
 	public void LoadKeyBindings()
 	{
+		if (SettingsManager.Instance == null)
+		{
+			Debug.LogError("[PlayerKeyboardInput] SettingsManager is null. Cannot load key bindings.");
+			return;
+		}
+
 		RotateLeftKey = (Key)SettingsManager.Instance.GetSetting<int>("RotateLeftKey", (int)Key.Z);
 		RotateRightKey = (Key)SettingsManager.Instance.GetSetting<int>("RotateRightKey", (int)Key.X);
 		ThrustKey = (Key)SettingsManager.Instance.GetSetting<int>("ThrustKey", (int)Key.N);

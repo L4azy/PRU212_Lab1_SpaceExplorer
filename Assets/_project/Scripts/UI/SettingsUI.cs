@@ -167,8 +167,8 @@ public class SettingsUI : MonoBehaviour
 
 	void OnMainMenuButtonClicked()
 	{
-		SceneManager.UnloadSceneAsync("Settings");
-		SceneManager.LoadScene("MenuScreen");
+		AudioSettings.ResetInstance();
+		SceneManager.LoadScene("MenuScreen", LoadSceneMode.Single);
 	}
 
 

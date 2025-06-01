@@ -507,6 +507,101 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c753bbc13cb5a54b917f351847098d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &228664376
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 228664377}
+  - component: {fileID: 228664379}
+  - component: {fileID: 228664378}
+  - component: {fileID: 228664380}
+  m_Layer: 5
+  m_Name: Heat Bar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &228664377
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228664376}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2048500704}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -25, y: 25.000015}
+  m_SizeDelta: {x: 50, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &228664378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228664376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0.9803922, b: 0.9803922, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 64f5428e485e0204db94d129eab4847f, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 0
+  m_FillClockwise: 1
+  m_FillOrigin: 2
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &228664379
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228664376}
+  m_CullTransparentMesh: 1
+--- !u!114 &228664380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228664376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b868420ed53be8b4580fbb46feece367, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 217783106}
+  _canvas: {fileID: 2048500703}
+  _screenOffset: {x: -145, y: -31.35, z: 0}
+  _overheatBar: {fileID: 228664378}
+  _coolColor: {r: 0, g: 1, b: 1, a: 1}
+  _hotColor: {r: 1, g: 0, b: 0, a: 1}
+  _overheatedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &260527019
 GameObject:
   m_ObjectHideFlags: 0
@@ -2067,10 +2162,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 5254448466146082610, guid: 09ea45f1461fd9a40bbbcecf2b5ca458, type: 3}
+  _laserPrefab: {fileID: 4915455927276281865, guid: 86a16ecfe857de74b9c1373a71a4653a, type: 3}
   _muzzle: {fileID: 1110535635}
   _bulletsParent: {fileID: 1624652236}
   _fireSound: 0
-  _fireSoundVolume: 0.25
+  _maxHeat: 130
+  _heatPerShot: 10
+  _overheatCooldown: 5
+  _laserDamage: 50
+  _fireSoundVolume: 0.2
+  _heatDissipationRate: 15
+  _heatUI: {fileID: 228664380}
 --- !u!4 &635916188
 Transform:
   m_ObjectHideFlags: 0
@@ -2462,7 +2564,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &829017601
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3784,6 +3886,8 @@ MonoBehaviour:
   _asteroidsToSpawn: 4
   _maxAsteroids: 10
   _minSpawnDistanceFromPlayer: 2
+  _starPrefab: {fileID: 1781002627506189602, guid: 17947da202db4c94aa14edf945b3feb5, type: 3}
+  _starsToSpawn: 2
 --- !u!1 &1588394424
 GameObject:
   m_ObjectHideFlags: 0
@@ -4500,6 +4604,7 @@ RectTransform:
   - {fileID: 914554819}
   - {fileID: 829017601}
   - {fileID: 1354556309}
+  - {fileID: 228664377}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4525,9 +4630,6 @@ MonoBehaviour:
   _playAgainText: {fileID: 1888991828}
   _playerLivesParent: {fileID: 646590853}
   _settingsButton: {fileID: 52645543}
-  _playerNameInput: {fileID: 595472484}
-  _leaderboardPanel: {fileID: 829017600}
-  _leaderboardText: {fileID: 1751877354}
 --- !u!114 &2048500706
 MonoBehaviour:
   m_ObjectHideFlags: 0

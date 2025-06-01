@@ -55,12 +55,25 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 	{
 		// Prevent multiple instances from existing
 		if (_instance == null)
+		{ 
 			_instance = this as T;
+			DontDestroyOnLoad(gameObject);
+		}
 
 		else if (_instance != this)
 		{
 			Debug.LogWarning($"[SingletonMonoBehaviour] Instance of singleton {typeof(T).Name} already exists. Destroying duplicate.");
 			Destroy(gameObject);
+		}
+	}
+
+	public static void ResetInstance()
+	{
+		if (_instance != null)
+		{
+			Destroy(_instance.gameObject);
+			_instance = null;
+			Debug.Log($"[SingletonMonoBehaviour] Singleton {typeof(T).Name} has been reset.");
 		}
 	}
 

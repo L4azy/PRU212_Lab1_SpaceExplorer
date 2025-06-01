@@ -13,12 +13,17 @@ using Random = UnityEngine.Random;
 
 public class AsteroidSpawner : MonoBehaviour
 {
+	[Header("Asteroid Settings")]
 	[SerializeField] Asteroid[] _smallAsteroidPrefabs;
 	[SerializeField] Asteroid[] _mediumAsteroidPrefabs;
 	[SerializeField] Asteroid[] _largeAsteroidPrefabs;
 	[SerializeField] GameObject _explosionPrefab;
 	[SerializeField] int _asteroidsToSpawn = 4, _maxAsteroids = 10;
 	[SerializeField] float _minSpawnDistanceFromPlayer = 2f;
+
+	[Header("Star Settings")]
+	[SerializeField] GameObject _starPrefab;
+	[SerializeField] int _starsToSpawn = 3;
 
 	readonly Dictionary<AsteroidSize, IObjectPool<Asteroid>> _asteroidPools = new();
 	readonly List<Asteroid> _asteroids = new();
@@ -27,9 +32,17 @@ public class AsteroidSpawner : MonoBehaviour
 
 	public void DestroyAsteroid(Asteroid asteroid, Vector3 position)
 	{
+
+		//Debug.Log($"DestroyAsteroid called for {asteroid.name} at position {position}");
 		ExplosionSpawner.Instance.SpawnExplosion(position);
 		SplitAsteroid(asteroid);
 		ReleaseAsteroidToPool(asteroid);
+
+		if (asteroid.Settings.Size == AsteroidSize.Large)
+		{
+			SpawnStars(position, _starsToSpawn);
+		}
+
 		if (_asteroids.Count == 0)
 		{
 			GameManager.Instance.RoundOver();
@@ -105,6 +118,22 @@ public class AsteroidSpawner : MonoBehaviour
 			_asteroids.Add(newAsteroid);
 		}
 	}
+
+	void SpawnStars(Vector3 position, int count)
+	{
+		for (int i = 0; i < count; i++)
+		{
+			GameObject star = Instantiate(_starPrefab, position, Quaternion.identity);
+			Rigidbody2D rb = star.GetComponent<Rigidbody2D>();
+			if (rb != null)
+			{
+				// Give each star a gentle random drift in any direction
+				rb.gravityScale = 0f; // Ensure no gravity
+				rb.linearVelocity = Random.insideUnitCircle.normalized * Random.Range(0.5f, 1.5f);
+			}
+		}
+	}
+
 
 	void ReleaseAsteroidToPool(Asteroid asteroid)
 	{

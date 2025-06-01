@@ -13,9 +13,9 @@ public class GameUI : MonoBehaviour
 	[SerializeField] Transform _playerLivesParent;
 	[SerializeField] UIButton _settingsButton;
 
-	[SerializeField] TMP_InputField _playerNameInput;
-	[SerializeField] GameObject _leaderboardPanel;
-	[SerializeField] TMP_Text _leaderboardText;
+	//[SerializeField] TMP_InputField _playerNameInput;
+	//[SerializeField] GameObject _leaderboardPanel;
+	//[SerializeField] TMP_Text _leaderboardText;
 
 	string _leaderboardFilename = "leaderboard.json";
 

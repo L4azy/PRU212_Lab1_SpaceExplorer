@@ -1,41 +1,56 @@
 using UnityEngine;
 using System;
 
-public class BulletBase : MonoBehaviour
+public class BulletBase : WeaponBase
 {
-    public event Action<BulletBase> OnBulletDestroyed;
+	public event Action<BulletBase> OnBulletDestroyed;
 
-    [SerializeField] GameObject _muzzleFlash, _hitEffect;
-    [SerializeField] float _speed = 100f, _duration = 3f;
+	[SerializeField] GameObject _muzzleFlash, _hitEffect;
+	[SerializeField] float _speed = 10f, _duration = 3f;
+	[SerializeField] float _damage = 10f;
+	private bool _hasHit = false;
 
 	Rigidbody2D _rigidbody;
-    Transform _transform;
-    Camera _cam;
-    bool _swappingX, _swappingY;
-    bool _destroyed;
-    Scorer _scorer;
-    Timer _timer;
+	Transform _transform;
+	Camera _cam;
+	bool _swappingX, _swappingY;
+	bool _destroyed;
+	Scorer _scorer;
+	Timer _timer;
 
 	void Awake()
 	{
 		_cam = Camera.main;
-        _transform = transform;
+		_transform = transform;
 		_rigidbody = GetComponent<Rigidbody2D>();
 		_scorer = GetComponent<Scorer>();
-        _timer = TimerManager.Instance.CreateTimer<CountdownTimer>();
+		_timer = TimerManager.Instance.CreateTimer<CountdownTimer>();
 	}
 
 	void OnEnable()
 	{
 		_destroyed = false;
-		_rigidbody.AddForce(_transform.up * _speed);
+		_hasHit = false;
+		if (_rigidbody != null)
+		{
+			_rigidbody.linearVelocity = transform.up * _speed;
+			_rigidbody.angularVelocity = 0f;
+		}
 		_timer.OnTimerStop += DestroyBullet;
 		_timer.Start(_duration);
 	}
 
 	void Update()
 	{
-		if (ViewportHelper.Instance.IsOnScreen(_transform.up * _speed))
+		// Destroy bullet when it goes off-screen
+		if (!ViewportHelper.Instance.IsOnScreen(_transform.position))
+		{
+			DestroyBullet();
+			return;
+		}
+
+		// Handle expanded universe swap
+		if (ViewportHelper.Instance.IsOnScreen(_transform.position))
 		{
 			_swappingX = _swappingY = false;
 			return;
@@ -46,8 +61,16 @@ public class BulletBase : MonoBehaviour
 
 	void OnCollisionEnter2D(Collision2D other)
 	{
+		if (_hasHit) return;
+		_hasHit = true;
+
+		var health = other.collider.GetComponent<Health>();
+		if (health != null)
+		{
+			health.ApplyDamage(_damage);
+		}
+
 		DestroyBullet();
-		_scorer?.ScorePoints(other);
 	}
 
 	void DestroyBullet()
@@ -57,6 +80,7 @@ public class BulletBase : MonoBehaviour
 		_timer.OnTimerStop -= DestroyBullet;
 		_timer.Stop();
 		OnBulletDestroyed?.Invoke(this);
+		gameObject.SetActive(false);
 	}
 
 	void HandleExpandedUniverseSwap()
@@ -79,4 +103,16 @@ public class BulletBase : MonoBehaviour
 		_transform.position = newPos;
 	}
 
+	public override void Fire(Vector3 position, Quaternion rotation, Transform parent)
+	{
+		transform.SetPositionAndRotation(position, rotation);
+		transform.SetParent(parent);
+		gameObject.SetActive(true);
+
+		if (_rigidbody != null)
+		{
+			_rigidbody.linearVelocity = transform.up * _speed;
+			_rigidbody.angularVelocity = 0f;
+		}
+	}
 }

@@ -3,9 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
-#if !UNITY_IOS && !UNITY_ANDROID
 using UnityEngine.InputSystem;
-#endif
 
 public class StartMenuUI : MonoBehaviour
 {
@@ -20,12 +18,18 @@ public class StartMenuUI : MonoBehaviour
 
 	void Awake()
 	{
-		_playerInput = gameObject.AddComponent<PlayerKeyboardInput>();
+		_playerInput = GetComponent<PlayerKeyboardInput>();
+		if (_playerInput == null)
+		{
+			Debug.LogError("[StartMenuUI] PlayerKeyboardInput is missing!");
+			return;
+		}
+
 		_playerKeyboardInput = (PlayerKeyboardInput)_playerInput;
-		//_playButton.gameObject.SetActive(false);
 		_pressSpaceText.SetActive(true);
 		ResetFadePanel();
 	}
+
 
 	void OnEnable()
 	{
@@ -74,6 +78,12 @@ public class StartMenuUI : MonoBehaviour
 
 	void UpdateControlsText()
 	{
+		if (_playerKeyboardInput == null)
+		{
+			Debug.LogError("[StartMenuUI] PlayerKeyboardInput is null! Cannot update controls text.");
+			return;
+		}
+
 		_controlsPanel.SetActive(true);
 		var rotateLeftKey = _playerKeyboardInput.RotateLeftKey;
 		var rotateRightKey = _playerKeyboardInput.RotateRightKey;
@@ -85,6 +95,7 @@ public class StartMenuUI : MonoBehaviour
 		_thrustFireControlsText.text = $"{thrustKey} / {fireKey} - Thrust Fire";
 		_hyperspaceControlText.text = $"{hyperspaceKey} - Hyperspace";
 	}
+
 
 	public void ResetFadePanel()
 	{

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3650497417863002411}
   - component: {fileID: 7544345465253079017}
   - component: {fileID: 7246196508849367502}
+  - component: {fileID: -5504579497136699022}
   m_Layer: 9
   m_Name: Ghost Medium Asteroid 1
   m_TagString: Untagged
@@ -195,3 +196,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74dd72854a25c5c4ebb0289a00e692bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-5504579497136699022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5875722919635679775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04a40880d22a9a84a8c51664dfcde9d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 250

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerShip : MonoBehaviour, ICollisionParent
 {
+	[Header("Ship Settings")]
 	[SerializeField] float _turnSpeed = 200f, _thrustSpeed = 120f;
 	[SerializeField] GameObject _exhaust;
 	[SerializeField] PlayerWeapons _playerWeapons;

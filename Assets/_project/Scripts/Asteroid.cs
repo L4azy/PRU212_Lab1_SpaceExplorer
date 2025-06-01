@@ -1,5 +1,6 @@
 ﻿using DG.Tweening.Core.Easing;
 using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,6 +8,11 @@ using Random = UnityEngine.Random;
 public class Asteroid : MonoBehaviour, ICollisionParent, IScoreable
 {
 	[SerializeField] AsteroidSettings _settings;
+
+	[SerializeField] Color _damageColor = Color.yellow;
+	[SerializeField] float _flashDuration = 0.1f;
+	Color _originalColor;
+	Coroutine _flashCoroutine;
 
 	public AsteroidSettings Settings => _settings;
 
@@ -37,10 +43,9 @@ public class Asteroid : MonoBehaviour, ICollisionParent, IScoreable
 
 	public void Collided(Collision2D collision)
 	{
-		if (_destroyed) return;
-		_destroyed = true;
-		_asteroidSpawner?.DestroyAsteroid(this, collision.transform.position);
+		
 	}
+
 
 	public int PointValue => _settings.Points;
 
@@ -50,6 +55,8 @@ public class Asteroid : MonoBehaviour, ICollisionParent, IScoreable
 		_rigidBody = GetComponent<Rigidbody2D>();
 		_collider = GetComponent<PolygonCollider2D>();
 		_renderer = GetComponent<Renderer>();
+		if (_renderer != null)
+			_originalColor = _renderer.material.color;
 	}
 
 	void OnEnable() => DisableComponents();
@@ -57,7 +64,22 @@ public class Asteroid : MonoBehaviour, ICollisionParent, IScoreable
 	void OnDisable() => DisableComponents();
 
 	void OnCollisionEnter2D(Collision2D other) => Collided(other);
-	
+
+	public void FlashOnDamage()
+	{
+		if (_flashCoroutine != null)
+			StopCoroutine(_flashCoroutine);
+		_flashCoroutine = StartCoroutine(DamageFlashCoroutine());
+	}
+
+	IEnumerator DamageFlashCoroutine()
+	{
+		if (_renderer != null)
+			_renderer.material.color = _damageColor;
+		yield return new WaitForSeconds(_flashDuration);
+		if (_renderer != null)
+			_renderer.material.color = _originalColor;
+	}
 
 	void DisableComponents()
 	{

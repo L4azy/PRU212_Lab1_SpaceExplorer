@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4353108422917066383}
   - component: {fileID: 2238808625959109507}
   - component: {fileID: 1155199131335736325}
+  - component: {fileID: -6639731191889196497}
   m_Layer: 9
   m_Name: Ghost Small Asteroid 3
   m_TagString: Untagged
@@ -187,3 +188,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74dd72854a25c5c4ebb0289a00e692bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-6639731191889196497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5451803508150991731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04a40880d22a9a84a8c51664dfcde9d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 50
