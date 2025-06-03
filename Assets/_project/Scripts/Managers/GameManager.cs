@@ -54,7 +54,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	{
 		if (_gameState == GameState.GameOver)
 		{
-			//Debug.LogWarning("PlayerDied called after game is already over. Ignoring.");
+			//
+			//Warning("PlayerDied called after game is already over. Ignoring.");
 			return;
 		}
 

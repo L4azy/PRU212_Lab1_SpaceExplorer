@@ -376,11 +376,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4598749745520674993, guid: 3cc1a96549571c24ab4758e4427598f8, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 232.1318
+      value: 218.2942
       objectReference: {fileID: 0}
     - target: {fileID: 4598749745520674993, guid: 3cc1a96549571c24ab4758e4427598f8, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 77.5974
+      value: 188.299
       objectReference: {fileID: 0}
     - target: {fileID: 4598749745520674993, guid: 3cc1a96549571c24ab4758e4427598f8, type: 3}
       propertyPath: m_LocalScale.x
@@ -424,11 +424,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4598749745520674993, guid: 3cc1a96549571c24ab4758e4427598f8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -965
+      value: -79.6
       objectReference: {fileID: 0}
     - target: {fileID: 4598749745520674993, guid: 3cc1a96549571c24ab4758e4427598f8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1023
+      value: -74.2
       objectReference: {fileID: 0}
     - target: {fileID: 4598749745520674993, guid: 3cc1a96549571c24ab4758e4427598f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1663,8 +1663,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 1414853065625666192, guid: 63fb64dbc7eddfb449413f5ab9459a66, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 5e2b950faf7568e478f04e32ca6f8f23, type: 3}
-  m_Resource: {fileID: 8300000, guid: 5e2b950faf7568e478f04e32ca6f8f23, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f0acdf2da46c31443a59abdfaeb620c5, type: 3}
+  m_Resource: {fileID: 8300000, guid: f0acdf2da46c31443a59abdfaeb620c5, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.721
   m_Pitch: 1

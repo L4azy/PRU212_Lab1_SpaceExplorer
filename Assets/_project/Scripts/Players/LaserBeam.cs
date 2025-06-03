@@ -79,7 +79,7 @@ public class LaserBeam : WeaponBase
 
 		if (hit.collider != null)
 		{
-			Debug.Log("Laser hit: " + hit.collider.gameObject.name + " on layer " + LayerMask.LayerToName(hit.collider.gameObject.layer));
+			//Debug.Log("Laser hit: " + hit.collider.gameObject.name + " on layer " + LayerMask.LayerToName(hit.collider.gameObject.layer));
 
 			beamEnd = hit.distance;
 

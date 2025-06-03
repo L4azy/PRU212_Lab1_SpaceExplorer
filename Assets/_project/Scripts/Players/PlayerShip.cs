@@ -17,7 +17,7 @@ public class PlayerShip : MonoBehaviour, ICollisionParent
 
 	public void Collided(Collision2D collision)
 	{
-		Debug.Log($"{name} collided with {collision.gameObject.name}", this);
+		//Debug.Log($"{name} collided with {collision.gameObject.name}", this);
 		ExplosionSpawner.Instance.SpawnExplosion(collision.gameObject.transform.position);
 		DisableShip();
 		ResetShipToStartPosition();

@@ -488,7 +488,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Main Menu
+  m_text: Exit game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 233633246}
   - component: {fileID: 233633245}
   m_Layer: 5
-  m_Name: MainMenu Button
+  m_Name: Exit Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3850,7 +3850,7 @@ MonoBehaviour:
   _fireSound: 0
   _saveButton: {fileID: 1913768663}
   _cancelButton: {fileID: 2009523858}
-  _mainMenuButton: {fileID: 233633245}
+  _exitGameButton: {fileID: 233633245}
 --- !u!1 &638515067
 GameObject:
   m_ObjectHideFlags: 0

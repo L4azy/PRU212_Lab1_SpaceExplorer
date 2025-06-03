@@ -22,7 +22,7 @@ public class SettingsUI : MonoBehaviour
 	[Header("Buttons")]
 	[SerializeField] Button _saveButton;
 	[SerializeField] Button _cancelButton;
-	[SerializeField] Button _mainMenuButton;
+	[SerializeField] Button _exitGameButton;
 
 	Key _rotateLeftKey, _rotateRightKey, _thrustKey, _fireKey, _hyperspaceKey;
 	PlayerKeyboardInput _playerKeyboardInput;
@@ -40,7 +40,7 @@ public class SettingsUI : MonoBehaviour
 	{
 		_saveButton.onClick.RemoveListener(OnSaveButtonClicked);
 		_cancelButton.onClick.RemoveListener(OnCancelButtonClicked);
-		_mainMenuButton.onClick.RemoveListener(OnMainMenuButtonClicked);
+		_exitGameButton.onClick.RemoveListener(OnExitGameButtonClicked);
 		UnsubscribeFromAudioSettingsControlHandlers();
 	}
 
@@ -58,7 +58,7 @@ public class SettingsUI : MonoBehaviour
 	{
 		_saveButton.onClick.AddListener(OnSaveButtonClicked);
 		_cancelButton.onClick.AddListener(OnCancelButtonClicked);
-		_mainMenuButton.onClick.AddListener(OnMainMenuButtonClicked) ;
+		_exitGameButton.onClick.AddListener(OnExitGameButtonClicked);
 	}
 
 	void InitialKeyboardControls()
@@ -165,12 +165,10 @@ public class SettingsUI : MonoBehaviour
 		CloseSettings();
 	}
 
-	void OnMainMenuButtonClicked()
+	void OnExitGameButtonClicked()
 	{
-		AudioSettings.ResetInstance();
-		SceneManager.LoadScene("MenuScreen", LoadSceneMode.Single);
+		Application.Quit();
 	}
-
 
 	void CloseSettings()
 	{

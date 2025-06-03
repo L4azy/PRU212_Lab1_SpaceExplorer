@@ -87,7 +87,7 @@ public class GameUI : MonoBehaviour
 
 		// Update the high score text
 		_highScoreText.text = minScore.ToString();
-		Debug.Log($"[GameUI] Lowest score in leaderboard: {minScore}");
+		//Debug.Log($"[GameUI] Lowest score in leaderboard: {minScore}");
 	}
 
 	void Update()

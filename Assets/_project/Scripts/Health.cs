@@ -21,7 +21,7 @@ public class Health : MonoBehaviour
 	{
 		if (IsDead) return;
 
-		Debug.Log($"{gameObject.name} takes {amount:F2} damage. Health before: {_currentHealth:F2}");
+		//Debug.Log($"{gameObject.name} takes {amount:F2} damage. Health before: {_currentHealth:F2}");
 
 		_currentHealth -= amount;
 
